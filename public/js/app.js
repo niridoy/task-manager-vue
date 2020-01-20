@@ -1959,13 +1959,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       id: 1,
       newTask: '',
       taskList: [],
-      showTaskList: []
+      showTaskList: [],
+      allListButton: true,
+      activeListButton: false,
+      completedListButton: false
     };
   },
   created: function created() {
@@ -1977,39 +1985,36 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     addTask: function addTask() {
-      var task = {
-        id: this.id++,
-        taskName: this.newTask,
-        isComplete: false
-      };
-      this.taskList.push(task);
-      this.newTask = '';
-      Fire.$emit('changedTaskList');
+      if (this.newTask == '') {
+        alert('Input filed is empty!');
+      } else {
+        var task = {
+          id: this.id++,
+          taskName: this.newTask,
+          isComplete: false
+        };
+        this.taskList.push(task);
+        this.newTask = '';
+        Fire.$emit('changedTaskList');
+      }
     },
     editTaskName: function editTaskName(updateTask) {
-      updateTask.isEdit = true;
-      var index = this.taskList.findIndex(function (task) {
-        return task.id === updateTask.id;
+      this.showTaskList = this.taskList.map(function (task) {
+        return task.isEdit = false;
       });
-
-      if (index !== -1) {
-        this.taskList.splice(index, 1, updateTask);
-      }
-
-      Fire.$emit('changedTaskList');
+      updateTask.isEdit = true;
+      this.updateTaskObject(updateTask);
     },
     updateTaskName: function updateTaskName(updateTask, event) {
       updateTask.taskName = event.target.value;
       updateTask.isEdit = false;
-      var index = this.taskList.findIndex(function (task) {
-        return task.id === updateTask.id;
+      this.updateTaskObject(updateTask);
+    },
+    totalCompletedTask: function totalCompletedTask() {
+      var completedTaskList = this.taskList.filter(function (task) {
+        return task.isComplete == true;
       });
-
-      if (index !== -1) {
-        this.taskList.splice(index, 1, updateTask);
-      }
-
-      Fire.$emit('changedTaskList');
+      return completedTaskList.length;
     },
     taskListReload: function taskListReload() {
       this.showTaskList = this.taskList;
@@ -2019,12 +2024,21 @@ __webpack_require__.r(__webpack_exports__);
         this.showTaskList = this.taskList.filter(function (task) {
           return task.isComplete == false;
         });
+        this.allListButton = false;
+        this.activeListButton = true;
+        this.completedListButton = false;
       } else if (status == 3) {
         this.showTaskList = this.taskList.filter(function (task) {
           return task.isComplete == true;
         });
+        this.allListButton = false;
+        this.activeListButton = false;
+        this.completedListButton = true;
       } else {
         this.showTaskList = this.taskList;
+        this.allListButton = true;
+        this.activeListButton = false;
+        this.completedListButton = false;
       }
     },
     deleteTask: function deleteTask(id) {
@@ -2035,6 +2049,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     markTaskComplete: function markTaskComplete(updateTask) {
       updateTask.isComplete = updateTask.isComplete ? false : true;
+      this.updateTaskObject(updateTask);
+    },
+    clearAllTask: function clearAllTask() {
+      this.taskList = this.taskList.filter(function (task) {
+        return task.isComplete !== true;
+      });
+      Fire.$emit('changedTaskList');
+    },
+    updateTaskObject: function updateTaskObject(updateTask) {
       var index = this.taskList.findIndex(function (task) {
         return task.id === updateTask.id;
       });
@@ -2043,10 +2066,6 @@ __webpack_require__.r(__webpack_exports__);
         this.taskList.splice(index, 1, updateTask);
       }
 
-      Fire.$emit('changedTaskList');
-    },
-    clearAllTask: function clearAllTask() {
-      this.taskList = [];
       Fire.$emit('changedTaskList');
     }
   }
@@ -19664,7 +19683,11 @@ var render = function() {
         }
       ],
       staticClass: "form-control mb-2",
-      attrs: { type: "text", name: "todo", placeholder: "Enter Your Task" },
+      attrs: {
+        type: "text",
+        name: "todo",
+        placeholder: "What needs to be done ?"
+      },
       domProps: { value: _vm.newTask },
       on: {
         keyup: function($event) {
@@ -19698,75 +19721,77 @@ var render = function() {
                   "list-group-item d-flex justify-content-between align-items-center"
               },
               [
-                _c("span", [
-                  _c("input", {
-                    staticClass: "mr-2",
-                    attrs: { type: "checkbox" },
-                    domProps: { checked: task.isComplete },
-                    on: {
-                      click: function($event) {
-                        return _vm.markTaskComplete(task)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  !task.isComplete
-                    ? _c(
-                        "span",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: !task.isEdit,
-                              expression: "!task.isEdit"
-                            }
-                          ],
-                          on: {
-                            click: function($event) {
-                              return _vm.editTaskName(task)
-                            }
+                !task.isEdit
+                  ? _c("span", [
+                      _c("input", {
+                        staticClass: "mr-2",
+                        attrs: { type: "checkbox" },
+                        domProps: { checked: task.isComplete },
+                        on: {
+                          click: function($event) {
+                            return _vm.markTaskComplete(task)
                           }
-                        },
-                        [_vm._v(_vm._s(task.taskName))]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: task.isEdit,
-                        expression: "task.isEdit"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    attrs: { type: "text" },
-                    domProps: { value: task.taskName },
-                    on: {
-                      keyup: function($event) {
-                        if (
-                          !$event.type.indexOf("key") &&
-                          _vm._k(
-                            $event.keyCode,
-                            "enter",
-                            13,
-                            $event.key,
-                            "Enter"
-                          )
-                        ) {
-                          return null
                         }
-                        return _vm.updateTaskName(task, $event)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  task.isComplete
-                    ? _c("del", [_vm._v(" " + _vm._s(task.taskName))])
-                    : _vm._e()
-                ]),
+                      }),
+                      _vm._v(" "),
+                      !task.isComplete
+                        ? _c(
+                            "span",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.editTaskName(task)
+                                }
+                              }
+                            },
+                            [_vm._v(_vm._s(task.taskName))]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      task.isComplete
+                        ? _c("del", [_vm._v(" " + _vm._s(task.taskName))])
+                        : _vm._e()
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                task.isEdit
+                  ? _c("span", { staticClass: "d-flex" }, [
+                      _c("input", {
+                        staticClass: "mr-2",
+                        staticStyle: { "margin-top": "12px" },
+                        attrs: { type: "checkbox" },
+                        domProps: { checked: task.isComplete },
+                        on: {
+                          click: function($event) {
+                            return _vm.markTaskComplete(task)
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("input", {
+                        staticClass: "form-control",
+                        attrs: { type: "text" },
+                        domProps: { value: task.taskName },
+                        on: {
+                          keyup: function($event) {
+                            if (
+                              !$event.type.indexOf("key") &&
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
+                              )
+                            ) {
+                              return null
+                            }
+                            return _vm.updateTaskName(task, $event)
+                          }
+                        }
+                      })
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
                 _c(
                   "span",
@@ -19803,6 +19828,7 @@ var render = function() {
                 "Button",
                 {
                   staticClass: "btn btn-sm",
+                  class: _vm.allListButton ? "btn-info" : "",
                   on: {
                     click: function($event) {
                       return _vm.changeTaskListByStatus(1)
@@ -19816,6 +19842,7 @@ var render = function() {
                 "Button",
                 {
                   staticClass: "btn btn-sm",
+                  class: _vm.activeListButton ? "btn-info" : "",
                   on: {
                     click: function($event) {
                       return _vm.changeTaskListByStatus(2)
@@ -19829,6 +19856,7 @@ var render = function() {
                 "Button",
                 {
                   staticClass: "btn btn-sm",
+                  class: _vm.completedListButton ? "btn-info" : "",
                   on: {
                     click: function($event) {
                       return _vm.changeTaskListByStatus(3)
@@ -19845,6 +19873,14 @@ var render = function() {
             _c(
               "button",
               {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.totalCompletedTask() > 0,
+                    expression: "totalCompletedTask() > 0"
+                  }
+                ],
                 staticClass: "btn btn-sm float-right",
                 on: {
                   click: function($event) {

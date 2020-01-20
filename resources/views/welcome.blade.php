@@ -63,6 +63,7 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
         </style>
     </head>
     <body>
@@ -71,7 +72,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                   ToDo Application
+                   Todos Application
                 </div>
                <toto-application></toto-application>
             </div>
