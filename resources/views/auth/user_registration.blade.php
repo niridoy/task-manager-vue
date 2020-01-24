@@ -23,31 +23,55 @@
             <div class="brand">
                 <a class="link" href="index.html">Task Manager</a>
             </div>
-            <form id="login-form" action="javascript:;" method="post">
-                <h2 class="login-title">Log in</h2>
-                <div class="form-group">
-                    <div class="input-group-icon right">
-                        <div class="input-icon"><i class="fa fa-envelope"></i></div>
-                        <input class="form-control" type="email" name="email" placeholder="Email" autocomplete="off">
-                    </div>
+            <form id="register-form" method="POST" action="{{ route('register') }}" method="POST">
+                <h2 class="login-title">Sign Up</h2>
+                @csrf
+                @method('POST')
+                <div class="form-group @error('name') has-error @enderror">
+                    <input class="form-control" type="text" name="name" placeholder="Enter Name">
+                    @error('name')
+                        <span class="help-block" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group @error('mobile') has-error @enderror">
+                    <input class="form-control" type="text" name="mobile" placeholder="Enter Mobile">
+                    @error('mobile')
+                        <span class="help-block" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group @error('email') has-error @enderror">
+                    <input class="form-control" type="email" name="email" placeholder="Enter Email" autocomplete="off">
+                    @error('email')
+                    <span class="help-block" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+                <div class="form-group @error('password') has-error @enderror">
+                    <input class="form-control" id="password" type="password" name="password" placeholder="Enter Password">
+                    @error('password')
+                    <span class="help-block" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
                 </div>
                 <div class="form-group">
-                    <div class="input-group-icon right">
-                        <div class="input-icon"><i class="fa fa-lock font-16"></i></div>
-                        <input class="form-control" type="password" name="password" placeholder="Password">
-                    </div>
+                    <input class="form-control" type="password" name="password_confirmation" placeholder="Enter Confirm Password">
                 </div>
-                <div class="form-group d-flex justify-content-between">
+                <div class="form-group text-left">
                     <label class="ui-checkbox ui-checkbox-info">
-                        <input type="checkbox">
-                        <span class="input-span"></span>Remember me</label>
-                    <a href="forgot_password.html">Forgot password?</a>
+                        <input type="checkbox" name="agree">
+                        <span class="input-span"></span>I agree the terms and policy</label>
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-info btn-block" type="submit">Login</button>
+                    <button class="btn btn-info btn-block" type="submit">Sign up</button>
                 </div>
                 <div class="social-auth-hr">
-                    <span>Or login with</span>
+                    <span>Or Sign up with</span>
                 </div>
                 <div class="text-center social-auth m-b-20">
                     <a class="btn btn-social-icon btn-twitter m-r-5" href="javascript:;"><i class="fa fa-twitter"></i></a>
@@ -56,10 +80,12 @@
                     <a class="btn btn-social-icon btn-linkedin m-r-5" href="javascript:;"><i class="fa fa-linkedin"></i></a>
                     <a class="btn btn-social-icon btn-vk" href="javascript:;"><i class="fa fa-vk"></i></a>
                 </div>
-                <div class="text-center">Not a member?
-                    <a class="color-blue" href="register.html">Create accaunt</a>
+                <div class="text-center">Already a member?
+                    <a class="color-blue" href="login.html">Login here</a>
                 </div>
             </form>
+
+
         </div>
         <!-- BEGIN PAGA BACKDROPS-->
         <div class="sidenav-backdrop backdrop"></div>

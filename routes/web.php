@@ -11,15 +11,26 @@
 |
 */
 
+
+Auth::routes();
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', function () {
-    return view('login');
-});
+
+//user router list
+    Route::prefix('dashboard')->group(function(){
+        Route::name('user.')->group(function(){
+            Route::get('/','Backend\User\UserController@index')->name('dashboard');
+        });
+    });
+
+// Route::get('/login', function () {
+//     return view('login');
+// });
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// });
