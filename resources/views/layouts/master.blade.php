@@ -10,12 +10,16 @@
         @include('layouts.style')
         <!--  page level css -->
         @stack('styles')
-
+       <Style>
+            .content-wrapper {
+                min-height: 100vh;
+            }
+       </Style>
     </head>
     <title>Task Management System || Dashboard</title>
 
     <body class="fixed-navbar">
-        <div class="page-wrapper">
+        <div class="page-wrapper" id="app">
 
             <!-- include header section -->
             @include('layouts.header')

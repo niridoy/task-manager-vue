@@ -24,7 +24,10 @@ Route::get('/', function () {
         Route::name('user.')->group(function(){
             Route::get('/','Backend\User\UserController@index')->name('dashboard');
         });
+        Route::get('/{section}','Backend\User\UserController@index')->where(['section' => '.*']);
     });
+
+
 
 // Route::get('/login', function () {
 //     return view('login');
